@@ -22,7 +22,6 @@ import android.widget.Toast;
 import android.content.DialogInterface;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import java.util.Locale;
 
 public class activity_start_game extends AppCompatActivity implements pause_dialog.DialogCallback, TimerHelper.TimerCallback {
