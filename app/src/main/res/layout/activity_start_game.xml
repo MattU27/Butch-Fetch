@@ -1,33 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container2"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
+    <!-- Example views -->
 
-    <!-- TextView to display "Game Started!" message -->
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Game Started!"
-        android:layout_centerInParent="true"
-        app:fontFamily="@font/press_start_2p_font" /> <!-- Specify your custom font here -->
+    <FrameLayout
+        android:id="@+id/backgroundContainer"
+        android:layout_width="match_parent"
+        android:layout_height="2500dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.503" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="36dp"
+        android:layout_height="83dp"
+        android:layout_marginTop="666dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Add more views as needed -->
+
 
     <!-- Pause Button -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:background="#FFFFFF"
         android:text="Pause"
         android:textColor="#000000"
-        android:background="#FFFFFF"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        app:fontFamily="@font/press_start_2p_font" />
+        app:fontFamily="@font/press_start_2p_font"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Other game UI elements -->
 
@@ -35,25 +52,28 @@
         android:id="@+id/countText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:text="00"
-        android:fontFamily="@font/presstart2pregular"
-        android:textSize="40dp" />
+        android:textSize="40dp"
+        android:textColor="#000000"
+        app:fontFamily="@font/presstart2pregular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/scoreText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/countText"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="-150dp"
-        android:layout_marginTop="32dp"
-        android:fontFamily="@font/presstart2pregular"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="250dp"
         android:text="000000"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:textColor="#000000"
+        app:fontFamily="@font/presstart2pregular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

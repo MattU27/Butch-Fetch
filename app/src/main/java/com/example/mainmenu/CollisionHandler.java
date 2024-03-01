@@ -6,6 +6,7 @@ public class CollisionHandler {
 
     private Rect image1; // Represents the hitbox of the ImageView
     private Rect obstacle; // Represents the obstacle's hitbox
+    private boolean isPaused = false; // Flag to indicate whether collision detection is paused or not
 
     public CollisionHandler() {
         // Initialize hitboxes for the ImageView and the obstacle
@@ -21,16 +22,18 @@ public class CollisionHandler {
 
     // Update positions of the hitboxes
     public void updatePositions(Rect imageViewHitbox) {
-        // Update the hitbox of the ImageView
-        image1.set(imageViewHitbox);
+        // Update the hitbox of the ImageView only if collision detection is not paused
+        if (!isPaused) {
+            image1.set(imageViewHitbox);
 
-        // Update the position of the obstacle
-        obstacle.offset(0, 10); // Adjust the offset for obstacle movement
+            // Update the position of the obstacle
+            obstacle.offset(0, 10); // Adjust the offset for obstacle movement
+        }
     }
 
     // Check for collisions between the ImageView and the obstacle
     public boolean checkCollision() {
-        return Rect.intersects(image1, obstacle);
+        return !isPaused && Rect.intersects(image1, obstacle);
     }
 
     // Handle collision between the ImageView and the obstacle
@@ -58,6 +61,13 @@ public class CollisionHandler {
         image1.offset(70, 0); // Adjust the offset according to your needs
     }
 
-    // Make the ImageView jump
+    // Pause collision detection
+    public void pause() {
+        isPaused = true;
+    }
 
+    // Resume collision detection
+    public void resume() {
+        isPaused = false;
+    }
 }
