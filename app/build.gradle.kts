@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.mainmenu"
-        minSdk = 24
+        minSdk = 34
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -19,7 +19,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -30,6 +33,9 @@ android {
 
 dependencies {
 
+    implementation ("com.badlogicgames.gdx:gdx:1.10.0")
+    implementation ("com.badlogicgames.gdx:gdx-backend-android:1.10.0")
+    implementation ("com.badlogicgames.gdx:gdx-box2d:1.10.0")  // Add if needed
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
