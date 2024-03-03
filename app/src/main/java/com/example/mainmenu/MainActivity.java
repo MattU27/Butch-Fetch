@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         boolean isMutedSfx = prefs.getBoolean("isMutedSfx", false);
         // sfx_number calls the sfx track to be played, please view at SoundPlayer.class
-        SoundPlayer.playSFX(this, isMutedSfx, 1);
+        SoundPlayer.playSFX(  isMutedSfx, 1);
         }
 
 

@@ -43,7 +43,8 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
 
     private ImageView imageView;
     private SimulationView simulationView;
-
+    private ObstacleRandomizer obstacleRandomizer;
+    private SoundPlayer soundPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,8 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
             SoundPlayer.playBGM(this);
         }
 
+        obstacleRandomizer = new ObstacleRandomizer(this, soundPlayer);
+
         // Initialize views
         timerCount = findViewById(R.id.countText);
         scoreCount = findViewById(R.id.scoreText);
@@ -74,7 +77,7 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
             public void onClick(View v) {
                 // Pause or resume game based on current game state
                 if (!gamePaused) {
-                    SoundPlayer.playSFX(activity_start_game.this, isMutedSFX, 1);
+                    SoundPlayer.playSFX( isMutedSFX, 1);
                     SoundPlayer.pauseBGM();
                     pauseGame();
                     gamePaused = true;
@@ -322,6 +325,7 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
     public void onBooleanPassed(boolean value, boolean value2) {
         if (value) {
             resumeGame();
+            SoundPlayer.playBGM(this);
         }
         SoundPlayer.muteVolume(value2);
         Button btnPause = findViewById(R.id.btn_pause);
