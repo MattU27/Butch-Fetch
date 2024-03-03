@@ -26,7 +26,6 @@ public class ObstacleRandomizer {
     }
 
 
-
     public Obstacle generateObstacle() {
         updateSpeed();
 

@@ -1,21 +1,18 @@
 package com.example.mainmenu;
+/*
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class RacingGame extends ApplicationAdapter {
-
+//kinomment out ko muna dito para tumakbo, pa tangal na lng pag gagamitin na - Munoz
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private ObstacleRandomizer obstacleRandomizer;
     private Obstacle currentObstacle;
-    private Texture obstacleTexture; // Declare obstacleTexture
-    private float obstacleY; // Declare obstacleY
-    private static final float LANE_WIDTH = 100; // Declare and assign value to LANE_WIDTH
 
     @Override
     public void create() {
@@ -25,10 +22,7 @@ public class RacingGame extends ApplicationAdapter {
 
         obstacleRandomizer = new ObstacleRandomizer();
         currentObstacle = obstacleRandomizer.generateObstacle();
-        obstacleTexture = new Texture("path_to_your_texture"); // Initialize obstacleTexture with your texture file
-        obstacleY = 0; // Initialize obstacleY
     }
-
     @Override
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
@@ -37,11 +31,11 @@ public class RacingGame extends ApplicationAdapter {
         update();
         draw();
     }
-
     private void update() {
+
         float deltaTime = Gdx.graphics.getDeltaTime();
         // Move the obstacle
-        obstacleY += currentObstacle.getSpeed() * deltaTime; // Update obstacleY
+        float obstacleY = currentObstacle.getSpeed() * deltaTime;
         currentObstacle = obstacleRandomizer.generateObstacle();
         // Handle collisions, check game over conditions, etc.
         // Update camera
@@ -52,12 +46,13 @@ public class RacingGame extends ApplicationAdapter {
 
         // Input graphics
         batch.draw(obstacleTexture, currentObstacle.getLane() * LANE_WIDTH, obstacleY);
+        // Change ObstacleTexture, Lane_Width, ObstacleY to the butch_fetch parameters
         batch.end();
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        obstacleTexture.dispose(); // Dispose texture when no longer needed
     }
 }
+*/
