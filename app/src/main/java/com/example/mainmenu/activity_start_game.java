@@ -1,6 +1,7 @@
 package com.example.mainmenu;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -16,15 +16,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.content.DialogInterface;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
 import java.util.Locale;
 
 public class activity_start_game extends AppCompatActivity implements pause_dialog.DialogCallback, TimerHelper.TimerCallback {
+
+    private RacingGame racingGame;
 
     // Declare class variables
     private TextView timerCount, scoreCount;
@@ -45,26 +46,14 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
     private SimulationView simulationView;
     private ObstacleRandomizer obstacleRandomizer;
     private SoundPlayer soundPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_game);
-        isGameStarted = startGame(); // Start the game initialization process
-        timerHelper = new TimerHelper(90000, this); // Initialize the timer helper
-        timerHelper.startTimer(); // Start the game timer
-        scoreHelper = new ScoreHelper(); // Initialize the score helper
 
-        // Retrieve mute settings from SharedPreferences
-        SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        isMuted = prefs.getBoolean("isMuted", false);
-        isMutedSFX = prefs.getBoolean("isMutedSfx", false);
-
-        // Start background music if not muted
-        if (!isMuted) {
-            SoundPlayer.playBGM(this);
-        }
-
-        obstacleRandomizer = new ObstacleRandomizer(this, soundPlayer);
+        // Create an instance of RacingGame
+        racingGame = new RacingGame();
 
         // Initialize views
         timerCount = findViewById(R.id.countText);
@@ -77,7 +66,7 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
             public void onClick(View v) {
                 // Pause or resume game based on current game state
                 if (!gamePaused) {
-                    SoundPlayer.playSFX( isMutedSFX, 1);
+                    SoundPlayer.playSFX(isMutedSFX, 1);
                     SoundPlayer.pauseBGM();
                     pauseGame();
                     gamePaused = true;
@@ -109,6 +98,24 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
                 }
             }
         });
+
+        // Start the game initialization process
+        isGameStarted = startGame();
+        timerHelper = new TimerHelper(90000, this); // Initialize the timer helper
+        timerHelper.startTimer(); // Start the game timer
+        scoreHelper = new ScoreHelper(); // Initialize the score helper
+
+        // Retrieve mute settings from SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        isMuted = prefs.getBoolean("isMuted", false);
+        isMutedSFX = prefs.getBoolean("isMutedSfx", false);
+
+        // Start background music if not muted
+        if (!isMuted) {
+            SoundPlayer.playBGM(this);
+        }
+
+        obstacleRandomizer = new ObstacleRandomizer(this, soundPlayer);
     }
 
     @Override
@@ -131,7 +138,7 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
 
         // Initialize simulation view
         ConstraintLayout container = findViewById(R.id.container2);
-        simulationView = new activity_start_game.SimulationView(this);
+        simulationView = new SimulationView(this);
         ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.MATCH_PARENT
