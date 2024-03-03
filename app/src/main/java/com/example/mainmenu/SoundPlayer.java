@@ -62,7 +62,6 @@ public class SoundPlayer {
         }
     }
 
-
     public static void playSFX( boolean isMute, int sfx_number) {
         if (!isMute && soundPool != null) {
             switch (sfx_number) {

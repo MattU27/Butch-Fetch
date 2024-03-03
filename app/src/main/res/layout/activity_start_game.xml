@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container2"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:excludeFromRecents="true">
 
 
     <!-- Example views -->
