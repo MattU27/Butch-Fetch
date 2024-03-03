@@ -322,5 +322,4 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
         btnPause.setEnabled(true);
         isPauseDialogShown = false;
     }
-
 }
