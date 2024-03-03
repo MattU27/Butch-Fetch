@@ -25,9 +25,7 @@ public class ObstacleRandomizer {
         startTime = System.currentTimeMillis();
     }
 
-    public ObstacleRandomizer() {
 
-    }
 
     public Obstacle generateObstacle() {
         updateSpeed();
