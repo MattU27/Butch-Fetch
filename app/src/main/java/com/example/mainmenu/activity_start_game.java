@@ -232,7 +232,6 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
     }
 
 
-
     private class SimulationView extends View {
 
         public SimulationView(Context context) {
