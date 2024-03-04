@@ -24,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.Locale;
 
+
+
 public class activity_start_game extends AppCompatActivity implements pause_dialog.DialogCallback, TimerHelper.TimerCallback {
 
     private TextView timerCount, scoreCount;
@@ -261,17 +263,15 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
                 @Override
                 public void run() {
                     generateObstaclesIfNeeded();
-                    moveObstacles(
-                            collisionHandler.getBlueObstaclePosition(),
-                            collisionHandler.getRedObstaclePosition(),
-                            collisionHandler.getGreenObstaclePosition()
-                    );
+                    moveObstacles();
                     invalidate();
                     handler.postDelayed(this, 16); // Adjust the delay as needed
                 }
             };
             handler.post(obstacleUpdater);
         }
+
+
 
         private void generateObstaclesIfNeeded() {
             long currentTime = System.currentTimeMillis();
@@ -303,25 +303,23 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
-            Rect blueObstacleRect = collisionHandler.getBlueObstaclePosition();
-            Rect redObstacleRect = collisionHandler.getRedObstaclePosition();
-            Rect greenObstacleRect = collisionHandler.getGreenObstaclePosition();
+            Rect blueObstacleRect = collisionHandler.getObstacles().get(0);
+            Rect redObstacleRect = collisionHandler.getObstacles().get(1);
+            Rect greenObstacleRect = collisionHandler.getObstacles().get(2);
 
             canvas.drawRect(blueObstacleRect, bluePaint);
             canvas.drawRect(redObstacleRect, redPaint);
             canvas.drawRect(greenObstacleRect, greenPaint);
         }
 
-        private void moveObstacles(Rect blueObstacle, Rect redObstacle, Rect greenObstacle) {
-            int obstacleSpeed = 10; // Adjust the speed as needed
-            blueObstacle.top += obstacleSpeed;
-            blueObstacle.bottom += obstacleSpeed;
-            redObstacle.top += obstacleSpeed;
-            redObstacle.bottom += obstacleSpeed;
-            greenObstacle.top += obstacleSpeed;
-            greenObstacle.bottom += obstacleSpeed;
-        }
 
+        private void moveObstacles() {
+            int obstacleSpeed = 10; // Adjust the speed as needed
+            for (Rect obstacle : collisionHandler.getObstacles()) {
+                obstacle.top += obstacleSpeed;
+                obstacle.bottom += obstacleSpeed;
+            }
+        }
     }
 
     @Override

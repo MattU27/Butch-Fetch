@@ -1,20 +1,20 @@
 package com.example.mainmenu;
 
 import android.graphics.Rect;
-
+import java.util.ArrayList;
 import java.util.Random;
 
 public class CollisionHandler {
-
     private Rect image1; // Represents the hitbox of the ImageView
-    private Rect blueObstacle; // Represents the blue obstacle's hitbox
-    private Rect redObstacle; // Represents the red obstacle's hitbox
-    private Rect greenObstacle; // Represents the green obstacle's hitbox
+    private ArrayList<Rect> obstacles; // ArrayList to store obstacles
     private boolean isPaused = false; // Flag to indicate whether collision detection is paused or not
 
     public CollisionHandler() {
         // Initialize hitboxes for the ImageView and the obstacles
         image1 = new Rect(0, 0, 0, 0); // Initialize with zero values
+
+        // Initialize the ArrayList to store obstacles
+        obstacles = new ArrayList<>();
 
         // Initialize hitboxes for the obstacles with random positions
         generateObstaclePositions();
@@ -33,7 +33,14 @@ public class CollisionHandler {
 
     // Check for collisions between the ImageView and the obstacles
     public boolean checkCollision() {
-        return !isPaused && (Rect.intersects(image1, blueObstacle) || Rect.intersects(image1, redObstacle) || Rect.intersects(image1, greenObstacle));
+        if (isPaused) return false;
+
+        for (Rect obstacle : obstacles) {
+            if (Rect.intersects(image1, obstacle)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Handle collision between the ImageView and the obstacles
@@ -48,16 +55,8 @@ public class CollisionHandler {
     }
 
     // Getter methods for obstacle positions
-    public Rect getBlueObstaclePosition() {
-        return blueObstacle;
-    }
-
-    public Rect getRedObstaclePosition() {
-        return redObstacle;
-    }
-
-    public Rect getGreenObstaclePosition() {
-        return greenObstacle;
+    public ArrayList<Rect> getObstacles() {
+        return obstacles;
     }
 
     // Move the ImageView's hitbox left
@@ -100,24 +99,24 @@ public class CollisionHandler {
         int rightPosition = random.nextInt(100) + rightLane; // Random position in the right lane
 
         // Initialize hitboxes for the obstacles with random positions in each lane
-        blueObstacle = new Rect(leftPosition, initialVerticalPosition, leftPosition + 200, initialVerticalPosition + obstacleHeight);
-        redObstacle = new Rect(middlePosition, initialVerticalPosition, middlePosition + 200, initialVerticalPosition + obstacleHeight);
-        greenObstacle = new Rect(rightPosition, initialVerticalPosition, rightPosition + 200, initialVerticalPosition + obstacleHeight);
+        obstacles.add(new Rect(leftPosition, initialVerticalPosition, leftPosition + 200, initialVerticalPosition + obstacleHeight));
+        obstacles.add(new Rect(middlePosition, initialVerticalPosition, middlePosition + 200, initialVerticalPosition + obstacleHeight));
+        obstacles.add(new Rect(rightPosition, initialVerticalPosition, rightPosition + 200, initialVerticalPosition + obstacleHeight));
     }
 
     // Method to generate a blue obstacle
     public void generateBlueObstacle() {
-        generateObstacle(blueObstacle);
+        generateObstacle(obstacles.get(0));
     }
 
     // Method to generate a red obstacle
     public void generateRedObstacle() {
-        generateObstacle(redObstacle);
+        generateObstacle(obstacles.get(1));
     }
 
     // Method to generate a green obstacle
     public void generateGreenObstacle() {
-        generateObstacle(greenObstacle);
+        generateObstacle(obstacles.get(2));
     }
 
     // Utility method to generate an obstacle at a random position in the respective lane
