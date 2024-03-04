@@ -207,8 +207,31 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
     private Rect getImageViewHitbox() {
         int[] location = new int[2];
         imageView.getLocationOnScreen(location);
-        return new Rect(location[0], location[1], location[0] + imageView.getWidth(), location[1] + imageView.getHeight());
+
+        // Adjust the hitbox position and size based on your image and layout
+        int offsetX = 50; // Adjust this value to align the hitbox horizontally
+        int offsetY = 100; // Adjust this value to align the hitbox vertically
+
+        // Get the vertical translation of the animation
+        float translationY = imageView.getTranslationY();
+        offsetY += (int) translationY; // Adjust offsetY based on the animation's vertical translation
+
+        // Get the bounding box of the visible part of the ImageView
+        Rect visibleBounds = new Rect();
+        imageView.getDrawingRect(visibleBounds);
+        // Offset the visibleBounds by the ImageView's location
+        visibleBounds.offset(location[0], location[1]);
+
+        // Adjust the hitbox position and size based on the visibleBounds
+        int left = visibleBounds.left + offsetX;
+        int top = visibleBounds.top + offsetY;
+        int right = visibleBounds.right - offsetX;
+        int bottom = visibleBounds.bottom - offsetY;
+
+        return new Rect(left, top, right, bottom);
     }
+
+
 
     private class SimulationView extends View {
 
