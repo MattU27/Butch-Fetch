@@ -158,7 +158,8 @@ public class MainGame extends AppCompatActivity {
             // Draw the obstacle
             Paint paint = new Paint();
             paint.setColor(Color.BLUE);
-            Rect obstacleRect = collisionHandler.getObstacle();
+            Rect obstacleRect = collisionHandler.getBlueObstacle(); // Or use getRedObstacle() or getGreenObstacle() as needed
+
             canvas.drawRect(obstacleRect, paint);
         }
     }

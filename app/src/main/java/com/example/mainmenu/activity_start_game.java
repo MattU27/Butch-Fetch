@@ -1,8 +1,8 @@
 package com.example.mainmenu;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -165,7 +165,8 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!gamePaused && !isPauseDialogShown) {
-            return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event);
+            return gestureDetector.onTouchEvent(event)
+                    || super.onTouchEvent(event);
         } else {
             return true;
         }
@@ -231,22 +232,96 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
         return new Rect(left, top, right, bottom);
     }
 
-
     private class SimulationView extends View {
+
+        private Paint bluePaint;
+        private Paint redPaint;
+        private Paint greenPaint;
+        private Handler handler;
+        private Runnable obstacleUpdater;
+        private boolean blueObstacleGenerated = false;
+        private boolean redObstacleGenerated = false;
+        private boolean greenObstacleGenerated = false;
+        private long lastObstacleGenerationTime = 0;
+        private long obstacleGenerationDelay = 2000; // Delay between obstacle generation in milliseconds
 
         public SimulationView(Context context) {
             super(context);
+            bluePaint = new Paint();
+            bluePaint.setColor(Color.BLUE);
+
+            redPaint = new Paint();
+            redPaint.setColor(Color.RED);
+
+            greenPaint = new Paint();
+            greenPaint.setColor(Color.GREEN);
+
+            handler = new Handler();
+            obstacleUpdater = new Runnable() {
+                @Override
+                public void run() {
+                    generateObstaclesIfNeeded();
+                    moveObstacles(
+                            collisionHandler.getBlueObstaclePosition(),
+                            collisionHandler.getRedObstaclePosition(),
+                            collisionHandler.getGreenObstaclePosition()
+                    );
+                    invalidate();
+                    handler.postDelayed(this, 16); // Adjust the delay as needed
+                }
+            };
+            handler.post(obstacleUpdater);
         }
+
+        private void generateObstaclesIfNeeded() {
+            long currentTime = System.currentTimeMillis();
+            long elapsedTime = currentTime - lastObstacleGenerationTime;
+
+            if (!blueObstacleGenerated && elapsedTime >= obstacleGenerationDelay) {
+                collisionHandler.generateBlueObstacle();
+                blueObstacleGenerated = true;
+                lastObstacleGenerationTime = currentTime;
+                return;
+            }
+
+            if (!redObstacleGenerated && elapsedTime >= obstacleGenerationDelay) {
+                collisionHandler.generateRedObstacle();
+                redObstacleGenerated = true;
+                lastObstacleGenerationTime = currentTime;
+                return;
+            }
+
+            if (!greenObstacleGenerated && elapsedTime >= obstacleGenerationDelay) {
+                collisionHandler.generateGreenObstacle();
+                greenObstacleGenerated = true;
+                lastObstacleGenerationTime = currentTime;
+            }
+        }
+
 
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
-            Paint paint = new Paint();
-            paint.setColor(Color.BLUE);
-            Rect obstacleRect = collisionHandler.getObstacle();
-            canvas.drawRect(obstacleRect, paint);
+            Rect blueObstacleRect = collisionHandler.getBlueObstaclePosition();
+            Rect redObstacleRect = collisionHandler.getRedObstaclePosition();
+            Rect greenObstacleRect = collisionHandler.getGreenObstaclePosition();
+
+            canvas.drawRect(blueObstacleRect, bluePaint);
+            canvas.drawRect(redObstacleRect, redPaint);
+            canvas.drawRect(greenObstacleRect, greenPaint);
         }
+
+        private void moveObstacles(Rect blueObstacle, Rect redObstacle, Rect greenObstacle) {
+            int obstacleSpeed = 10; // Adjust the speed as needed
+            blueObstacle.top += obstacleSpeed;
+            blueObstacle.bottom += obstacleSpeed;
+            redObstacle.top += obstacleSpeed;
+            redObstacle.bottom += obstacleSpeed;
+            greenObstacle.top += obstacleSpeed;
+            greenObstacle.bottom += obstacleSpeed;
+        }
+
     }
 
     @Override
@@ -345,3 +420,4 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
         isPauseDialogShown = false;
     }
 }
+
