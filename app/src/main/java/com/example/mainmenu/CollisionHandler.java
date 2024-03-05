@@ -1,23 +1,44 @@
 package com.example.mainmenu;
 
 import android.graphics.Rect;
-import java.util.ArrayList;
+import android.os.Handler;
 import java.util.Random;
 
 public class CollisionHandler {
+
     private Rect image1; // Represents the hitbox of the ImageView
-    private ArrayList<Rect> obstacles; // ArrayList to store obstacles
+    private Rect blueObstacle; // Represents the blue obstacle's hitbox
+    private Rect redObstacle; // Represents the red obstacle's hitbox
+    private Rect greenObstacle; // Represents the green obstacle's hitbox
     private boolean isPaused = false; // Flag to indicate whether collision detection is paused or not
+
+    private long lastObstacleGenerationTime = 0; // Track the time of the last obstacle generation
+    private static final long OBSTACLE_GENERATION_INTERVAL = 5000; // 5 seconds in milliseconds
+
+    private Handler obstacleHandler;
+    private Runnable obstacleRunnable;
 
     public CollisionHandler() {
         // Initialize hitboxes for the ImageView and the obstacles
         image1 = new Rect(0, 0, 0, 0); // Initialize with zero values
 
-        // Initialize the ArrayList to store obstacles
-        obstacles = new ArrayList<>();
-
         // Initialize hitboxes for the obstacles with random positions
         generateObstaclePositions();
+
+        // Initialize the handler and runnable for obstacle generation
+        obstacleHandler = new Handler();
+        obstacleRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!isPaused) {
+                    generateObstacle();
+                }
+                // Schedule the next obstacle generation after the specified interval
+                obstacleHandler.postDelayed(this, OBSTACLE_GENERATION_INTERVAL);
+            }
+        };
+        // Start generating obstacles
+        obstacleHandler.post(obstacleRunnable);
     }
 
     // Update positions of the hitboxes
@@ -26,21 +47,14 @@ public class CollisionHandler {
         if (!isPaused) {
             image1.set(imageViewHitbox);
 
-            // Update the position of the obstacles (if they move)
-            // Example: obstacle.offset(0, 10); // Adjust the offset for obstacle movement
+            // Move obstacles down the screen
+            moveObstaclesDown();
         }
     }
 
     // Check for collisions between the ImageView and the obstacles
     public boolean checkCollision() {
-        if (isPaused) return false;
-
-        for (Rect obstacle : obstacles) {
-            if (Rect.intersects(image1, obstacle)) {
-                return true;
-            }
-        }
-        return false;
+        return !isPaused && (Rect.intersects(image1, blueObstacle) || Rect.intersects(image1, redObstacle) || Rect.intersects(image1, greenObstacle));
     }
 
     // Handle collision between the ImageView and the obstacles
@@ -55,8 +69,28 @@ public class CollisionHandler {
     }
 
     // Getter methods for obstacle positions
-    public ArrayList<Rect> getObstacles() {
-        return obstacles;
+    public Rect getBlueObstaclePosition() {
+        return blueObstacle;
+    }
+
+    public Rect getRedObstaclePosition() {
+        return redObstacle;
+    }
+
+    public Rect getGreenObstaclePosition() {
+        return greenObstacle;
+    }
+
+    public Rect getBlueObstacle() {
+        return blueObstacle;
+    }
+
+    public Rect getRedObstacle() {
+        return redObstacle;
+    }
+
+    public Rect getGreenObstacle() {
+        return greenObstacle;
     }
 
     // Move the ImageView's hitbox left
@@ -81,59 +115,51 @@ public class CollisionHandler {
 
     // Generate random positions for the obstacles
     private void generateObstaclePositions() {
-        // Define the lane boundaries
-        int leftLane = 100;
-        int middleLane = 400;
-        int rightLane = 700;
-
         // Define the obstacle height
         int obstacleHeight = 200;
 
-        // Generate random initial vertical positions for the obstacles
-        Random random = new Random();
-        int initialVerticalPosition = -500; // Adjust the initial position as needed
-
-        // Generate random positions for the obstacles in each lane
-        int leftPosition = random.nextInt(100) + leftLane; // Random position in the left lane
-        int middlePosition = random.nextInt(100) + middleLane; // Random position in the middle lane
-        int rightPosition = random.nextInt(100) + rightLane; // Random position in the right lane
-
         // Initialize hitboxes for the obstacles with random positions in each lane
-        obstacles.add(new Rect(leftPosition, initialVerticalPosition, leftPosition + 200, initialVerticalPosition + obstacleHeight));
-        obstacles.add(new Rect(middlePosition, initialVerticalPosition, middlePosition + 200, initialVerticalPosition + obstacleHeight));
-        obstacles.add(new Rect(rightPosition, initialVerticalPosition, rightPosition + 200, initialVerticalPosition + obstacleHeight));
+        blueObstacle = new Rect(100, 0, 300, obstacleHeight);
+        redObstacle = new Rect(400, 0, 600, obstacleHeight);
+        greenObstacle = new Rect(700, 0, 900, obstacleHeight);
     }
 
-    // Method to generate a blue obstacle
-    public void generateBlueObstacle() {
-        generateObstacle(obstacles.get(0));
-    }
-
-    // Method to generate a red obstacle
-    public void generateRedObstacle() {
-        generateObstacle(obstacles.get(1));
-    }
-
-    // Method to generate a green obstacle
-    public void generateGreenObstacle() {
-        generateObstacle(obstacles.get(2));
-    }
-
-    // Utility method to generate an obstacle at a random position in the respective lane
-    private void generateObstacle(Rect obstacle) {
+    // Generate a new obstacle
+    private void generateObstacle() {
+        // Adjust the lane and position of the obstacle as needed
         Random random = new Random();
-        int laneWidth = 300; // Adjust the width of each lane as needed
-        int lanePosition = random.nextInt(laneWidth); // Random position within the lane
-        int laneOffset = 100; // Adjust the offset for each lane as needed
+        int lane = random.nextInt(3); // Randomly select a lane (0, 1, or 2)
+        int obstaclePosition = lane * 300 + 100; // Calculate the obstacle position based on the lane
 
-        // Update the obstacle's position within the lane
-        obstacle.left = laneOffset + lanePosition;
-        obstacle.top = -500; // Adjust the initial vertical position as needed
-        obstacle.right = obstacle.left + 200; // Adjust the obstacle's width as needed
-        obstacle.bottom = obstacle.top + 200; // Adjust the obstacle's height as needed
+        // Create the obstacle hitbox based on the selected lane and position
+        // For example, if lane = 0, the obstacle will be in the left lane, if lane = 1, middle lane, etc.
+        // Adjust the size of the obstacle as needed
+        Rect obstacle;
+        switch (lane) {
+            case 0:
+                obstacle = blueObstacle;
+                break;
+            case 1:
+                obstacle = redObstacle;
+                break;
+            case 2:
+                obstacle = greenObstacle;
+                break;
+            default:
+                obstacle = blueObstacle;
+                break;
+        }
+        obstacle.offsetTo(obstaclePosition, 0);
     }
 
-    public Rect getObstacle() {
-        return null;
+    // Move obstacles down the screen
+    private void moveObstaclesDown() {
+        // Adjust the speed and direction of obstacle movement as needed
+        int obstacleSpeed = 10;
+
+        // Move each obstacle down by the specified speed
+        blueObstacle.offset(0, obstacleSpeed);
+        redObstacle.offset(0, obstacleSpeed);
+        greenObstacle.offset(0, obstacleSpeed);
     }
 }
