@@ -1,5 +1,8 @@
 package com.example.mainmenu;
 
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Handler;
 import java.util.Random;
@@ -12,8 +15,8 @@ public class CollisionHandler {
     private Rect greenObstacle; // Represents the green obstacle's hitbox
     private boolean isPaused = false; // Flag to indicate whether collision detection is paused or not
 
-    private long lastObstacleGenerationTime = 0; // Track the time of the last obstacle generation
-    private static final long OBSTACLE_GENERATION_INTERVAL = 5000; // 5 seconds in milliseconds
+    private long lastObstacleGenerationTime = 5; // Track the time of the last obstacle generation
+    private static final long OBSTACLE_GENERATION_INTERVAL = 1000; // 5 seconds in milliseconds
 
     private Handler obstacleHandler;
     private Runnable obstacleRunnable;
@@ -131,6 +134,7 @@ public class CollisionHandler {
         int lane = random.nextInt(3); // Randomly select a lane (0, 1, or 2)
         int obstaclePosition = lane * 300 + 100; // Calculate the obstacle position based on the lane
 
+
         // Create the obstacle hitbox based on the selected lane and position
         // For example, if lane = 0, the obstacle will be in the left lane, if lane = 1, middle lane, etc.
         // Adjust the size of the obstacle as needed
@@ -155,7 +159,7 @@ public class CollisionHandler {
     // Move obstacles down the screen
     private void moveObstaclesDown() {
         // Adjust the speed and direction of obstacle movement as needed
-        int obstacleSpeed = 10;
+        int obstacleSpeed = 20;
 
         // Move each obstacle down by the specified speed
         blueObstacle.offset(0, obstacleSpeed);

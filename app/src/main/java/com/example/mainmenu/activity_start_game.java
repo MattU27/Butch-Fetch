@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.Locale;
+import android.graphics.drawable.Drawable;
 
 public class activity_start_game extends AppCompatActivity implements pause_dialog.DialogCallback, TimerHelper.TimerCallback {
 
@@ -155,10 +156,11 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
     private void updateGame() {
         if (!gamePaused) {
             collisionHandler.updatePositions(getImageViewHitbox());
-            if (collisionHandler.checkCollision()) {
-                pauseGame();
-                showGameOverDialog();
+            if (!collisionHandler.checkCollision()) {
+                return;
             }
+            pauseGame();
+            showGameOverDialog();
         }
     }
 
@@ -239,8 +241,11 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
         private Handler handler;
         private Runnable obstacleUpdater;
 
+        private Drawable coneDrawable;
+
         public SimulationView(Context context) {
             super(context);
+
             bluePaint = new Paint();
             bluePaint.setColor(Color.BLUE);
 
@@ -282,11 +287,21 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
             Rect greenObstacleRect = collisionHandler.getGreenObstaclePosition();
 
             // Draw obstacles
-            canvas.drawRect(blueObstacleRect, bluePaint);
-            canvas.drawRect(redObstacleRect, redPaint);
-            canvas.drawRect(greenObstacleRect, greenPaint);
+            drawObstacleImage(canvas, R.drawable.cone_top, collisionHandler.getBlueObstaclePosition());
+            drawObstacleImage(canvas, R.drawable.cone_top, collisionHandler.getRedObstaclePosition());
+            drawObstacleImage(canvas, R.drawable.cone_top, collisionHandler.getGreenObstaclePosition());
         }
+        private void drawObstacleImage(Canvas canvas, int drawableId, Rect obstacleRect) {
+            // Load the drawable resource
+            Drawable drawable = getResources().getDrawable(drawableId);
 
+            // Set the bounds of the drawable to match the obstacle rectangle
+            drawable.setBounds(obstacleRect);
+
+            // Draw the drawable on the canvas
+            drawable.draw(canvas);
+            }
+        }
         // Move obstacles down the screen
         private void moveObstacles(Rect blueObstacle, Rect redObstacle, Rect greenObstacle) {
             int obstacleSpeed = 10; // Adjust the speed as needed
@@ -298,7 +313,7 @@ public class activity_start_game extends AppCompatActivity implements pause_dial
             greenObstacle.bottom += obstacleSpeed;
         }
 
-    }
+
 
 
 
